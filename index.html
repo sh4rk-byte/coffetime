@@ -13,31 +13,31 @@
             background-color: #1a1a1a;
             color: #e0e0e0;
         }
-        
+
         .container {
             background: #2d2d2d;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 2px 20px rgba(0,0,0,0.3);
         }
-        
+
         h1 {
             text-align: center;
             color: #d4a574;
             margin-bottom: 30px;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #e0e0e0;
         }
-        
+
         input[type="time"], textarea {
             width: 100%;
             padding: 10px;
@@ -48,7 +48,7 @@
             background-color: #3a3a3a;
             color: #e0e0e0;
         }
-        
+
         select {
             padding: 10px;
             border: 2px solid #444;
@@ -58,18 +58,18 @@
             color: #e0e0e0;
             margin-right: 10px;
         }
-        
+
         select:focus, input:focus, textarea:focus {
             border-color: #d4a574;
             outline: none;
         }
-        
+
         .time-selector {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         textarea {
             width: 100%;
             padding: 10px;
@@ -82,7 +82,7 @@
             background-color: #3a3a3a;
             color: #e0e0e0;
         }
-        
+
         button {
             width: 100%;
             padding: 12px;
@@ -95,17 +95,17 @@
             transition: background-color 0.3s;
             font-weight: bold;
         }
-        
+
         button:hover {
             background-color: #e6b885;
         }
-        
+
         button:disabled {
             background-color: #555;
             color: #888;
             cursor: not-allowed;
         }
-        
+
         .status {
             margin-top: 15px;
             padding: 10px;
@@ -113,13 +113,13 @@
             text-align: center;
             display: none;
         }
-        
+
         .success {
             background-color: #1e3a2e;
             color: #4caf50;
             border: 1px solid #2e5c3e;
         }
-        
+
         .error {
             background-color: #3a1e1e;
             color: #f44336;
@@ -135,7 +135,8 @@
                 <label for="time">Select your preferred time:</label>
                 <div class="time-selector">
                     <select id="hour" name="hour" required>
-                        <option value="0">Hour</option>
+                        <option value="">Hour</option>
+                        <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -148,19 +149,19 @@
                         <option value="10">10</option>
                         <option value="11">11</option>
                         <option value="12">12</option>
-                        <option value="13">1</option>
-                        <option value="14">2</option>
-                        <option value="15">3</option>
-                        <option value="16">4</option>
-                        <option value="17">5</option>
-                        <option value="18">6</option>
-                        <option value="19">7</option>
-                        <option value="20">8</option>
-                        <option value="21">9</option>
-                        <option value="22">10</option>
-                        <option value="23">11</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
                     </select>
-                    
+
                     <select id="minute" name="minute" required>
                         <option value="">Minute</option>
                         <option value="00">00</option>
@@ -170,49 +171,49 @@
                     </select>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label for="coffee">What kind of coffee would you like?</label>
                 <textarea id="coffee" name="coffee" placeholder="Describe your coffee order and add your signature :)" required></textarea>
             </div>
-            
+
             <button type="submit" id="sendBtn">Send Order</button>
         </form>
-        
+
         <div id="status" class="status"></div>
     </div>
 
     <script>
         // Replace with your Discord webhook URL
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1404551241060847857/7tkOmL96CGpXH-puGMBOSaqyH5HrdKIM-vp1HMKbS7d7dyjV2rZm_A5ZUfMjWCwcgcAN';
-        
+
         document.getElementById('coffeeForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const hourInput = document.getElementById('hour').value;
             const minuteInput = document.getElementById('minute').value;
             const coffeeInput = document.getElementById('coffee').value;
             const sendBtn = document.getElementById('sendBtn');
             const status = document.getElementById('status');
-            
+
             if (!hourInput || !minuteInput || !coffeeInput.trim()) {
                 showStatus('Please fill in all fields', 'error');
                 return;
             }
-            
+
             // Disable button and show loading
             sendBtn.disabled = true;
             sendBtn.textContent = 'Sending...';
-            
+
             try {
                 // Format time
                 const formattedTime = `${hourInput}:${minuteInput}`;
-                
+
                 // Create Discord message
                 const message = {
                     content: `☕ **New Coffee Order**\n\n⏰ **Time:** ${formattedTime}\n☕ **Order:** ${coffeeInput}`
                 };
-                
+
                 // Send to Discord webhook
                 const response = await fetch(DISCORD_WEBHOOK_URL, {
                     method: 'POST',
@@ -221,7 +222,7 @@
                     },
                     body: JSON.stringify(message)
                 });
-                
+
                 if (response.ok) {
                     showStatus('Order sent successfully! ☕', 'success');
                     document.getElementById('coffeeForm').reset();
