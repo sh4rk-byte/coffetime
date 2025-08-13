@@ -242,7 +242,7 @@
     </div>
 
     <script>
-        // Replace with your Discord webhook URL
+        // Discord webhook URL
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1404551241060847857/7tkOmL96CGpXH-puGMBOSaqyH5HrdKIM-vp1HMKbS7d7dyjV2rZm_A5ZUfMjWCwcgcAN';
 
         // Cookie functions
@@ -320,6 +320,15 @@
                 const userName = getCookie('coffeeUserName');
                 const signature = userName ? `\n\n**Ordered by:** ${userName}` : '';
 
+                // Store order details for rating page
+                const orderDetails = {
+                    time: formattedTime,
+                    coffee: coffeeInput,
+                    userName: userName,
+                    date: new Date().toLocaleDateString()
+                };
+                sessionStorage.setItem('coffeeOrder', JSON.stringify(orderDetails));
+
                 // Create Discord message
                 const message = {
                     content: `☕ **New Coffee Order**\n\n⏰ **Time:** ${formattedTime}\n☕ **Order:** ${coffeeInput}${signature}`
@@ -335,8 +344,13 @@
                 });
 
                 if (response.ok) {
-                    showStatus('Order sent successfully! ☕', 'success');
+                    showStatus('Order sent successfully! Redirecting to rating page...', 'success');
                     document.getElementById('coffeeForm').reset();
+
+                    // Redirect to rating page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'rating.html';
+                    }, 2000);
                 } else {
                     throw new Error('Failed to send order');
                 }
